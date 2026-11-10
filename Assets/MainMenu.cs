@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -41,10 +42,16 @@ public class MainMenu : MonoBehaviour
         
     }
 
-    public void StartGame()
+    public void StartGame(string scene)
     {
         print("Loading");
-        SceneManager.LoadScene("Level1");
+        try
+        {
+            SceneManager.LoadScene(scene);
+        } catch (Exception e)
+        {
+            print(e.ToString());
+        }
         
     }
 }
