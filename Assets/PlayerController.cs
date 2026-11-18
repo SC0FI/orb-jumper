@@ -13,16 +13,16 @@ public class PlayerController : MonoBehaviour
     private GameLogic gameLogic;
 
     float timeDiff;
-
     private InputValue movementValue;
 
     private float movementX;
     private float movementY;
     private bool dashRequested;
+    private bool doubleJump = true;
     [SerializeField]
     private float dashCooldown = 5.0f;
     private float nextDash;
-    private bool onGround;
+
     [SerializeField]
     private Image shift;
 
@@ -100,7 +100,7 @@ public class PlayerController : MonoBehaviour
 
     void OnJump(InputValue movementValue)
     {
-        if (movementValue.isPressed && onGround)
+        if (movementValue.isPressed && (CheckIfOnGround(gameObject)))
         {
             rb.AddForce(Vector3.up * rb.mass * 500);
         }
@@ -114,7 +114,10 @@ public class PlayerController : MonoBehaviour
             dashRequested = true;
         }
 
-        if (transform.position.y <= 0.5) { onGround = true; } else { onGround = false; }
+        if (doubleJump == false && CheckIfOnGround(gameObject))
+        {
+            doubleJump = true;
+        }
 
     }
 
@@ -140,6 +143,27 @@ public class PlayerController : MonoBehaviour
         if (collision.transform.CompareTag("Enemy"))
         {
             gameLogic.EndGame("Lose");
+        }
+    }
+
+    private bool CheckIfOnGround(GameObject gameObject)
+    {
+        if (Physics.Raycast(transform.position, Vector3.down, 0.5f))
+        {
+            print("Ground");
+            return true;
+
+        }
+        else if (doubleJump == true)
+        {
+            print("Double Jump");
+            doubleJump = false;
+            return true;
+        }
+        else
+        {
+            print("Not on ground");
+            return false;
         }
     }
 
