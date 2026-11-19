@@ -36,6 +36,10 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private float dashSpeed = 10f;
 
+    [SerializeField]
+    private Animator shiftAnimator;
+
+
     // Initialize physics before input callbacks can run.
     void Awake()
     {
@@ -69,7 +73,7 @@ public class PlayerController : MonoBehaviour
 
         if(Time.time > nextDash)
         {
-            shift.color = Color.green;
+            //shift.color = Color.green;
         }
 
         if (dashRequested)
@@ -80,7 +84,9 @@ public class PlayerController : MonoBehaviour
                 rb.AddForce(dashDirection * dashSpeed, ForceMode.VelocityChange);
                 dashRequested = false;
                 nextDash = Time.time + dashCooldown;
-                shift.color = Color.red;
+
+                //shift.color = Color.red;
+                shiftAnimator.Play("Base Layer.DashCooldown", 0, 0f);
             } else
             {
                 dashRequested = false; // stops from dashing double dashing on accident
