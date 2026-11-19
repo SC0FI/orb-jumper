@@ -1,4 +1,5 @@
 using System;
+using System.Text.RegularExpressions;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -25,6 +26,7 @@ public class GameLogic : MonoBehaviour
 
     [SerializeField]
     private GameObject pauseMenu;
+
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -61,6 +63,12 @@ public class GameLogic : MonoBehaviour
         if (End == "Lose")
         {
             winText.GetComponent<TextMeshProUGUI>().text = "You Lose";
+        } else
+        {
+            PlayerPrefs.SetInt("level", int.Parse(Regex.Match(SceneManager.GetActiveScene().name, @"\d+").Value));
+            int totalCoins = PlayerPrefs.GetInt("Coins");
+            PlayerPrefs.SetInt("coins", totalCoins + coins);
+            PlayerPrefs.Save();
         }
 
         winText.gameObject.SetActive(true);
