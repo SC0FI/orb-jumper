@@ -16,7 +16,11 @@ public class GameLogic : MonoBehaviour
     [SerializeField]
     private TextMeshProUGUI winText;
     [SerializeField]
-    private Button button;
+    private GameObject endMenu;
+    [SerializeField]
+    private Button endButton;
+    [SerializeField]
+    private Button restartButton;
     [SerializeField]
     private EnemyMovement enemyMovement;
     [SerializeField]
@@ -32,10 +36,10 @@ public class GameLogic : MonoBehaviour
     void Start()
     {
         SetCountText();
-        winText.gameObject.SetActive(false);
-        button.gameObject.SetActive(false);
+        //winText.gameObject.SetActive(false);
+        //endButton.gameObject.SetActive(false);
+        endMenu.SetActive(false);
 
-        button.onClick.AddListener(Restart);
     }
 
     // Update is called once per frame
@@ -71,14 +75,16 @@ public class GameLogic : MonoBehaviour
             PlayerPrefs.Save();
         }
 
-        winText.gameObject.SetActive(true);
+        //winText.gameObject.SetActive(true);
+        //endButton.gameObject.SetActive(true);
+        endMenu.SetActive(true);
         Destroy(GameObject.FindGameObjectsWithTag("Enemy")[0]);
-        button.gameObject.SetActive(true);
+        
        
 
     }
 
-    private void Restart()
+    public void Restart()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
