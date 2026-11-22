@@ -10,6 +10,7 @@ using UnityEngine.UI;
 public class GameLogic : MonoBehaviour
 {
     public int coins = 0;
+    public int totalCoinsInLevel;
     bool won = false;
     [SerializeField]
     private TextMeshProUGUI coinsText;
@@ -39,7 +40,7 @@ public class GameLogic : MonoBehaviour
         //winText.gameObject.SetActive(false);
         //endButton.gameObject.SetActive(false);
         endMenu.SetActive(false);
-
+        totalCoinsInLevel = GameObject.FindGameObjectsWithTag("Pickup").Length;
     }
 
     // Update is called once per frame
@@ -51,7 +52,7 @@ public class GameLogic : MonoBehaviour
     public void AddCoin()
     {
         coins += 1;
-        if (coins == 4 && won == false)
+        if (coins == totalCoinsInLevel && won == false      /*coins == 4 && won == false*/)
         {
             EndGame("Win");
         }
