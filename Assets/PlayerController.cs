@@ -129,6 +129,9 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+
+        gameLogic.CheckLocationGoal(other.gameObject);
+
         if (other.CompareTag("Pickup"))
         {
             // Use the Rotator belonging to the pickup we actually touched.
