@@ -71,7 +71,7 @@ public class GameLogic : MonoBehaviour
         } else
         {
             PlayerPrefs.SetInt("level", int.Parse(Regex.Match(SceneManager.GetActiveScene().name, @"\d+").Value));
-            int totalCoins = PlayerPrefs.GetInt("Coins");
+            int totalCoins = PlayerPrefs.GetInt("coins");
             PlayerPrefs.SetInt("coins", totalCoins + coins);
             PlayerPrefs.Save();
         }
