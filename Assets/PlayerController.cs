@@ -168,8 +168,24 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            print("Not on ground");
-            return false;
+            if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, 1f))
+            {
+                GameObject hitObject = hit.collider.gameObject;
+                if ((hitObject.transform.rotation.eulerAngles.x == 0f) && (hitObject.transform.rotation.eulerAngles.z == 0f))
+                {
+                    print("not a sloped surface");
+                    return false;
+                }
+                else
+                {
+                    print("SLOPED SURFACE ALLOWING EXTENDED JUMP");
+                    return true;
+                }
+            } else {
+                print("Not on ground");
+                return false;
+            }
+                
         }
     }
 
