@@ -9,7 +9,20 @@ using UnityEngine.UI;
 
 public class GameLogic : MonoBehaviour
 {
+    public enum GoalType
+    {
+        [InspectorName("Coin Goal")]
+        Coin,
+        [InspectorName("Location Goal")]
+        Location
+    }
+    [SerializeField] private GoalType goal = GoalType.Coin;
+    [SerializeField] private GameObject goalLocation;
+
+
+    [HideInInspector]
     public int coins = 0;
+    [HideInInspector]
     public int totalCoinsInLevel;
     bool won = false;
     [SerializeField]
@@ -36,11 +49,12 @@ public class GameLogic : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        totalCoinsInLevel = GameObject.FindGameObjectsWithTag("Pickup").Length;
         SetCountText();
         //winText.gameObject.SetActive(false);
         //endButton.gameObject.SetActive(false);
         endMenu.SetActive(false);
-        totalCoinsInLevel = GameObject.FindGameObjectsWithTag("Pickup").Length;
+        
     }
 
     // Update is called once per frame
@@ -52,15 +66,24 @@ public class GameLogic : MonoBehaviour
     public void AddCoin()
     {
         coins += 1;
-        if (coins == totalCoinsInLevel && won == false      /*coins == 4 && won == false*/)
+        if (coins == totalCoinsInLevel && won == false && goal == GoalType.Coin      /*coins == 4 && won == false*/)
         {
+            EndGame("Win");
+        }
+    }
+
+    public void CheckLocationGoal(GameObject enteredObject)
+    {
+        if (goal == GoalType.Location && enteredObject == goalLocation && !won)
+        {
+            won = true;
             EndGame("Win");
         }
     }
 
     public void SetCountText()
     {
-        coinsText.text = "Coins: " + coins.ToString();
+        coinsText.text = "Coins: " + coins.ToString() + " / " +  totalCoinsInLevel;
     }
 
     public void EndGame(String End)
@@ -90,6 +113,8 @@ public class GameLogic : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
+    
+
     public void Pause()
     {
         if (paused) {
@@ -113,3 +138,30 @@ public class GameLogic : MonoBehaviour
         SceneManager.LoadScene("MainMenu");
     }
 }
+
+
+
+
+#if UNITY_EDITOR
+[UnityEditor.CustomEditor(typeof(GameLogic))]
+public class GameLogicEditor : UnityEditor.Editor
+{
+    public override void OnInspectorGUI()
+    {
+        serializedObject.Update();
+
+        DrawPropertiesExcluding(serializedObject, "goal", "goalLocation");
+
+        var goal = serializedObject.FindProperty("goal");
+        UnityEditor.EditorGUILayout.PropertyField(goal);
+
+        if (goal.enumValueIndex == (int)GameLogic.GoalType.Location)
+        {
+            var location = serializedObject.FindProperty("goalLocation");
+            UnityEditor.EditorGUILayout.PropertyField(location);
+        }
+
+        serializedObject.ApplyModifiedProperties();
+    }
+}
+#endif
