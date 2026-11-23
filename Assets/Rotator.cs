@@ -8,16 +8,22 @@ public class Rotator : MonoBehaviour
 
     [SerializeField]
     private float speed = 0;
+    ParticleSystem particle;
     void Start()
     {
-        
+        particle = GetComponentInChildren<ParticleSystem>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        //transform.Rotate(new Vector3(15, 30, 45) * Time.deltaTime * speed);
+        transform.Rotate(new Vector3(15, 30, 45) * Time.deltaTime * speed);
 
+    }
+
+    private void LateUpdate()
+    {
+        particle.transform.rotation = Quaternion.Euler(-90, 0, 0);
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -29,7 +35,6 @@ public class Rotator : MonoBehaviour
     {
         if (asd == gameObject)
         {
-            ParticleSystem particle = asd.GetComponentInChildren<ParticleSystem>();
             particle.Play();
             BoxCollider collider = asd.GetComponent<BoxCollider>();
             collider.enabled = false;
