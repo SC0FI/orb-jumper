@@ -39,10 +39,15 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private Animator shiftAnimator;
 
+    private ParticleSystem particle;
+
 
     // Initialize physics before input callbacks can run.
     void Awake()
     {
+
+        particle = GetComponentInChildren<ParticleSystem>();
+
         rb = GetComponent<Rigidbody>();
         rb.sleepThreshold = 0.0f;
 
@@ -50,6 +55,9 @@ public class PlayerController : MonoBehaviour
         {
             movementCamera = Camera.main.transform;
         }
+        var main = particle.main;
+        main.simulationSpace = ParticleSystemSimulationSpace.World;
+
     }
 
     private void FixedUpdate()
@@ -71,7 +79,9 @@ public class PlayerController : MonoBehaviour
         Vector3 movement = Vector3.ClampMagnitude(right * movementX + forward * movementY, 1f);
         rb.AddForce(movement * speed);
 
-        if(Time.time > nextDash)
+        particle.transform.rotation = Quaternion.Euler(90, 0, 0);
+
+        if (Time.time > nextDash)
         {
             //shift.color = Color.green;
         }
@@ -166,6 +176,18 @@ public class PlayerController : MonoBehaviour
         else if (doubleJump == true)
         {
             print("Double Jump");
+            ParticleSystem effect = Instantiate
+            (
+                particle,
+                particle.transform.position,
+                Quaternion.Euler(90f, 0f, 0f)
+            );
+
+            var main = effect.main;
+            main.loop = false;
+            main.stopAction = ParticleSystemStopAction.Destroy;
+
+            effect.Play();
             doubleJump = false;
             return true;
         }
