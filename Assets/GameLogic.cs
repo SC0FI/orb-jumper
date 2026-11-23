@@ -19,6 +19,8 @@ public class GameLogic : MonoBehaviour
     [SerializeField] private GoalType goal = GoalType.Coin;
     [SerializeField] private GameObject goalLocation;
 
+    public bool gameActive = true;
+
 
     [HideInInspector]
     public int coins = 0;
@@ -98,9 +100,8 @@ public class GameLogic : MonoBehaviour
             PlayerPrefs.SetInt("coins", totalCoins + coins);
             PlayerPrefs.Save();
         }
-
-        //winText.gameObject.SetActive(true);
-        //endButton.gameObject.SetActive(true);
+        gameActive = false;
+        playerController.gameObject.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePosition;
         endMenu.SetActive(true);
         Destroy(GameObject.FindGameObjectsWithTag("Enemy")[0]);
         
@@ -117,19 +118,24 @@ public class GameLogic : MonoBehaviour
 
     public void Pause()
     {
-        if (paused) {
-            //UNPAUSE
-            enemyMovement.Pause(false);
-            playerController.Pause(false);
-            pauseMenu.gameObject.SetActive(false);
-            paused = false;
+        if (gameActive) { 
+            if (paused) {
+                //UNPAUSE
+                enemyMovement.Pause(false);
+                playerController.Pause(false);
+                pauseMenu.gameObject.SetActive(false);
+                paused = false;
+            } else
+            {
+                //PAUSE
+                enemyMovement.Pause(true);
+                playerController.Pause(true);
+                pauseMenu.gameObject.SetActive(true);
+                paused = true;
+            }
         } else
         {
-            //PAUSE
-            enemyMovement.Pause(true);
-            playerController.Pause(true);
-            pauseMenu.gameObject.SetActive(true);
-            paused = true;
+            print("Cant Pause! Game is over!");
         }
     }
 
@@ -141,7 +147,7 @@ public class GameLogic : MonoBehaviour
 
 
 
-
+//thing to make selecting goal in editor easier
 #if UNITY_EDITOR
 [UnityEditor.CustomEditor(typeof(GameLogic))]
 public class GameLogicEditor : UnityEditor.Editor
