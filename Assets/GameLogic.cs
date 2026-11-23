@@ -47,6 +47,8 @@ public class GameLogic : MonoBehaviour
     [SerializeField]
     private GameObject pauseMenu;
 
+    private RectTransform worldspace;
+
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -56,13 +58,20 @@ public class GameLogic : MonoBehaviour
         //winText.gameObject.SetActive(false);
         //endButton.gameObject.SetActive(false);
         endMenu.SetActive(false);
+        if (goal == GoalType.Location)
+        {
+            worldspace = goalLocation.GetComponentInChildren<RectTransform>();
+        }
         
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        if (goal == GoalType.Location)
+        {
+            worldspace.LookAt(Camera.main.transform);
+        }
     }
 
     public void AddCoin()
